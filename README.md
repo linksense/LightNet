@@ -1,5 +1,6 @@
 # LightNet
-This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation" (underway)  by Huijun Liu @ TU Braunschweig.
+This repository contains the code (in PyTorch) for: "LightNet: Light-weight Semantic Segmentation Network designed for 
+Cityscapes and Mapillary Vistas Dataset" (underway)  by Huijun Liu @ TU Braunschweig.
 
 ## Contents
 
@@ -19,7 +20,8 @@ In this paper we describe several light-weight networks based on MobileNetV2, Ad
 Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by
 multiply-add (MAdd), as well as the number of parameters.
 
-
+### Network Architecture
+underway...
 
 ## Usage
 
@@ -78,5 +80,8 @@ We also include Mixed-scale DenseNet, ShuffleNetPlus, SE-DPShuffleNet, Wide-ResN
 ansleliu@gmail.com  
 h.liu@tu-braunschweig.de
 
-We are working on the implementation on other frameworks.  
+We are working on the implementation on other frameworks.
 Any discussions or concerns are welcomed!
+
+## References
+underway...
