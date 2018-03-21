@@ -1,6 +1,5 @@
 # LightNet
-This repository contains the code (in PyTorch) for: "LightNet: Light-weight Semantic Segmentation Network designed for 
-Cityscapes and Mapillary Vistas Dataset" (underway)  by Huijun Liu @ TU Braunschweig.
+This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation" (underway)  by Huijun Liu @ TU Braunschweig.
 
 ## Contents
 
