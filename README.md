@@ -13,7 +13,7 @@ I no longer have GPUs to continue more experiments and model training (I **borro
 so if you like, welcome to experiment with other under-training models and my ideas!
 
 <p align="center">
-<a href="https://youtu.be/0g9zDGSRBi0" target="_blank"><img src="https://media.giphy.com/media/7EevkhftBgQrZjhJ8D/giphy.gif" width="340"/></a>
+<a href="https://youtu.be/0g9zDGSRBi0" target="_blank"><img src="https://media.giphy.com/media/7EevkhftBgQrZjhJ8D/giphy.gif" width="480"/></a>
 </p>
 
 ## Contents
