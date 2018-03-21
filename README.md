@@ -73,7 +73,7 @@ We also include Mixed-scale DenseNet, ShuffleNetPlus, SE-DPShuffleNet, Wide-ResN
 |---|---|---|---|---|---|---|---|
 |MobileNetV2Plus|117.1?|8.3M|Yes/No|73.89/70.72|88.72/87.64|[GoogleDrive](https://drive.google.com/open?id=1b1NJhe4sQ126d7xqg-d9mf8WNTstAoER)|[GoogleDrive](https://drive.google.com/open?id=19s7mdCJqTgZ17hgN7_t17sP-RM_FibmW)|
 |RF-MobileNetV2Plus|87.6?|8.6M|Yes/No|72.37/70.68|88.31/88.27|[GoogleDrive](https://drive.google.com/open?id=1JmB5KNmMV92yk5qtjwZnX-ZOhU35Pk6Y)|[GoogleDrive](https://drive.google.com/open?id=1QKLJ7u3DKKOTrMGQCFOprqQZWVrmWQm7)|
-|SE-WResNet|?|?M|Yes/No|80.13/77.15|90.87/90.59|/|/|
+|SE-WResNetV2|?|?M|Yes/No|80.13/77.15|90.87/90.59|/|/|
 
 
 ## Contact
