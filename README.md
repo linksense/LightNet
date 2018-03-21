@@ -2,12 +2,12 @@
 This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation
 " (underway) by Huijun Liu @ TU Braunschweig.
 
-- **MobileNetV2Plus**: Modified MobileNetV2<sup>[[1,8]](#Reference)</sup> + Spatial-Channel Sequeeze & Excitation (SCSE)<sup>[[6]](#Reference)</sup> + ASPP<sup>[[2,3]](#Reference)</sup> + Encoder-Decoder Arch.<sup>[[3]](#Reference)</sup> + InplaceABN<sup>[[4]](#Reference)</sup>.
-- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB)<sup>[[5]](#Reference)</sup> + Encoder-Decoder Arch. + InplaceABN.
+- **MobileNetV2Plus**: Modified MobileNetV2<sup>[[1,8]](#References)</sup> + Spatial-Channel Sequeeze & Excitation (SCSE)<sup>[[6]](#References)</sup> + ASPP<sup>[[2,3]](#References)</sup> + Encoder-Decoder Arch.<sup>[[3]](#References)</sup> + InplaceABN<sup>[[4]](#References)</sup>.
+- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB)<sup>[[5]](#References)</sup> + Encoder-Decoder Arch. + InplaceABN.
 - **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
-- **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet<sup>[[11]](#Reference)</sup> + SCSE + ASPP/RFB + InplaceABN.
-- **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#Reference)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
-- **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#Reference)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
+- **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet<sup>[[11]](#References)</sup> + SCSE + ASPP/RFB + InplaceABN.
+- **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#References)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
+- **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#References)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
@@ -22,13 +22,13 @@ so if you like, welcome to experiment with other under-training models and my id
 2. [Usage](#usage)
 3. [Results](#results)
 4. [Contacts](#contacts)
-5. [Reference](#Reference)
+5. [References](#References)
 
 ## Introduction
 Semantic Segmentation is a significant part of the modern autonomous driving system, as exact understanding the surrounding scene is very important for the navigation and driving decision of the self-driving car. 
 Nowadays, deep fully convolutional networks (FCNs) have a very significant effect on semantic segmentation, but most of the relevant researchs have focused on improving segmentation accuracy rather than model computation efficiency. 
 However, the autonomous driving system is often based on embedded devices, where computing and storage resources are relatively limited. 
-In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce GAN for data augmentation<sup>[[17]](#Reference)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. 
+In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce GAN for data augmentation<sup>[[17]](#References)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. 
 We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
 
 ### Network Architecture
