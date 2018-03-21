@@ -25,12 +25,13 @@ so if you like, welcome to experiment with other under-training models and my id
 3. [Results](#results)
 4. [Contacts](#contacts)
 5. [References](#references)
+5. [Acknowledgement](#acknowledgement)
 
 ## Introduction
 Semantic Segmentation is a significant part of the modern autonomous driving system, as exact understanding the surrounding scene is very important for the navigation and driving decision of the self-driving car. 
 Nowadays, deep fully convolutional networks (FCNs) have a very significant effect on semantic segmentation, but most of the relevant researchs have focused on improving segmentation accuracy rather than model computation efficiency. 
 However, the autonomous driving system is often based on embedded devices, where computing and storage resources are relatively limited. 
-In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce GAN for data augmentation<sup>[[17]](#references)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. 
+In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce **GAN for data augmentation**<sup>[[17]](#references)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent **Spatial-Channel Sequeeze & Excitation** (SCSE) and **Receptive Field Block** (RFB) to the proposed network. 
 We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
 
 ### Network Architecture
@@ -87,14 +88,13 @@ Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, S
 |---|---|---|---|---|---|---|---|
 |MobileNetV2Plus|117.1?|8.3M|Yes/No|73.89/70.72|88.72/87.64|[GoogleDrive](https://drive.google.com/open?id=1b1NJhe4sQ126d7xqg-d9mf8WNTstAoER)|[GoogleDrive](https://drive.google.com/open?id=19s7mdCJqTgZ17hgN7_t17sP-RM_FibmW)|
 |RF-MobileNetV2Plus|87.6?|8.6M|Yes/No|72.37/70.68|88.31/88.27|[GoogleDrive](https://drive.google.com/open?id=1JmB5KNmMV92yk5qtjwZnX-ZOhU35Pk6Y)|[GoogleDrive](https://drive.google.com/open?id=1QKLJ7u3DKKOTrMGQCFOprqQZWVrmWQm7)|
-|SE-WResNetV2|?|?M|Yes/No|80.13/77.15|90.87/90.59|/|/|
+|SE-WResNetV2|?|?M|Yes/No|80.13/77.15|90.87/90.59|[GoogleDrive](https://drive.google.com/open?id=1MIJL6cfoBt3opcPWeNfudXLimE42Ow6_)|/|
 
 
 ## Contact
 ansleliu@gmail.com  
 h.liu@tu-braunschweig.de
 
-We are working on the implementation on other frameworks.
 Any discussions or concerns are welcomed!
 
 ## References
@@ -117,3 +117,16 @@ Any discussions or concerns are welcomed!
 [17]. [High-Resolution Image Synthesis and Semantic Manipulation with Conditional GANs](https://arxiv.org/abs/1711.11585v1)  
 [18]. [SGDR: Stochastic Gradient Descent with Warm Restarts](https://arxiv.org/abs/1608.03983v5)  
 [19]. [Cyclical Learning Rates for Training Neural Networks](https://arxiv.org/abs/1506.01186v6)  
+
+
+# Acknowledgement
+
+[0]. [Lukas Zhang](https://github.com/ZHHJemotion): Lend me GPUs.  
+[1]. [meetshah1995](https://github.com/meetshah1995): [pytorch-semseg](https://github.com/meetshah1995/pytorch-semseg).  
+[2]. [ruinmessi](https://github.com/ruinmessi): [RFBNet](https://github.com/ruinmessi/RFBNet).  
+[3]. [Jackson Huang](https://github.com/jaxony): [ShuffleNet](https://github.com/jaxony/ShuffleNet).  
+[4]. [Ji Lin](https://github.com/tonylins): [pytorch-mobilenet-v2](https://github.com/tonylins/pytorch-mobilenet-v2).  
+[5]. [ericsun99](https://github.com/ericsun99): [MobileNet-V2-Pytorch](https://github.com/ericsun99/MobileNet-V2-Pytorch).  
+[6]. [Ross Wightman](https://github.com/rwightman): [pytorch-dpn-pretrained](https://github.com/rwightman/pytorch-dpn-pretrained).  
+[7]. [mapillary](https://github.com/mapillary): [inplace_abn](https://github.com/mapillary/inplace_abn).  
+[8]. [Cadene](https://github.com/Cadene): [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch).  
