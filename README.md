@@ -1,7 +1,9 @@
 # LightNet
 This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation
-" (underway)  by Huijun Liu @ TU Braunschweig.
+" (underway) by Huijun Liu @ TU Braunschweig.
 
+I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
+so if you like, welcome to experiment with other under-training models and my ideas!
 ## Contents
 
 1. [Introduction](#introduction)
@@ -56,10 +58,11 @@ To evaluate the trained model:
 ```
 
 ### Other Options
-We also include Mixed-scale DenseNet, ShuffleNetPlus, SE-DPShuffleNet, Wide-ResNet implementation in this repository.  
+We also include Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, SE-DPShuffleNet, SE-Wide-ResNetV2 implementation in this repository.  
 
 
 ## Results
+Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, SE-DPShuffleNet, SE-Wide-ResNetV2 under-training (Ask a friend for help)
 
 ### Results on Cityscapes (Pixel-level/Semantic Segmentation)
 
