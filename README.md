@@ -3,11 +3,11 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 " (underway) by Huijun Liu @ TU Braunschweig.
 
 - **MobileNetV2Plus**: Modified MobileNetV2 + Spatial-Channel Sequeeze & Excitation (SCSE) + ASPP + Encoder-Decoder Arch. + InplaceABN.
-- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB) + Encoder-Decoder Arch + InplaceABN.
-- **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch + InplaceABN.
+- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB) + Encoder-Decoder Arch. + InplaceABN.
+- **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet + SCSE + ASPP/RFB + InplaceABN.
-- **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE) + SCSE/SE + ASPP/RFB + InplaceABN.
-- **ShuffleNetPlus**: Modified ShuffleNet + SCSE + ASPP/RFB + Encoder-Decoder Arch + InplaceABN.
+- **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE) + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
+- **ShuffleNetPlus**: Modified ShuffleNet + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
