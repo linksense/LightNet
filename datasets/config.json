@@ -1,0 +1,733 @@
+{
+  "labels": [
+    {
+      "color": [
+        165, 
+        42, 
+        42
+      ], 
+      "instances": true, 
+      "readable": "Bird", 
+      "name": "animal--bird", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        192, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Ground Animal", 
+      "name": "animal--ground-animal", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        196, 
+        196, 
+        196
+      ], 
+      "instances": false, 
+      "readable": "Curb", 
+      "name": "construction--barrier--curb", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        190, 
+        153, 
+        153
+      ], 
+      "instances": false, 
+      "readable": "Fence", 
+      "name": "construction--barrier--fence", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        180, 
+        165, 
+        180
+      ], 
+      "instances": false, 
+      "readable": "Guard Rail", 
+      "name": "construction--barrier--guard-rail", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        102, 
+        102, 
+        156
+      ], 
+      "instances": false, 
+      "readable": "Barrier", 
+      "name": "construction--barrier--other-barrier", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        102, 
+        102, 
+        156
+      ], 
+      "instances": false, 
+      "readable": "Wall", 
+      "name": "construction--barrier--wall", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        128, 
+        64, 
+        255
+      ], 
+      "instances": false, 
+      "readable": "Bike Lane", 
+      "name": "construction--flat--bike-lane", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        140, 
+        140, 
+        200
+      ], 
+      "instances": true, 
+      "readable": "Crosswalk - Plain", 
+      "name": "construction--flat--crosswalk-plain", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        170, 
+        170, 
+        170
+      ], 
+      "instances": false, 
+      "readable": "Curb Cut", 
+      "name": "construction--flat--curb-cut", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        250, 
+        170, 
+        160
+      ], 
+      "instances": false, 
+      "readable": "Parking", 
+      "name": "construction--flat--parking", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        96, 
+        96, 
+        96
+      ], 
+      "instances": false, 
+      "readable": "Pedestrian Area", 
+      "name": "construction--flat--pedestrian-area", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        230, 
+        150, 
+        140
+      ], 
+      "instances": false, 
+      "readable": "Rail Track", 
+      "name": "construction--flat--rail-track", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        128, 
+        64, 
+        128
+      ], 
+      "instances": false, 
+      "readable": "Road", 
+      "name": "construction--flat--road", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        110, 
+        110, 
+        110
+      ], 
+      "instances": false, 
+      "readable": "Service Lane", 
+      "name": "construction--flat--service-lane", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        244, 
+        35, 
+        232
+      ], 
+      "instances": false, 
+      "readable": "Sidewalk", 
+      "name": "construction--flat--sidewalk", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        150, 
+        100, 
+        100
+      ], 
+      "instances": false, 
+      "readable": "Bridge", 
+      "name": "construction--structure--bridge", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        70, 
+        70, 
+        70
+      ], 
+      "instances": false, 
+      "readable": "Building", 
+      "name": "construction--structure--building", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        150, 
+        120, 
+        90
+      ], 
+      "instances": false, 
+      "readable": "Tunnel", 
+      "name": "construction--structure--tunnel", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        220, 
+        20, 
+        60
+      ], 
+      "instances": true, 
+      "readable": "Person", 
+      "name": "human--person", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        0, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Bicyclist", 
+      "name": "human--rider--bicyclist", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        0, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Motorcyclist", 
+      "name": "human--rider--motorcyclist", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        0, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Other Rider", 
+      "name": "human--rider--other-rider", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        200, 
+        128, 
+        128
+      ], 
+      "instances": true, 
+      "readable": "Lane Marking - Crosswalk", 
+      "name": "marking--crosswalk-zebra", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        255, 
+        255
+      ], 
+      "instances": false, 
+      "readable": "Lane Marking - General", 
+      "name": "marking--general", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        64, 
+        170, 
+        64
+      ], 
+      "instances": false, 
+      "readable": "Mountain", 
+      "name": "nature--mountain", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        128, 
+        64, 
+        64
+      ], 
+      "instances": false, 
+      "readable": "Sand", 
+      "name": "nature--sand", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        70, 
+        130, 
+        180
+      ], 
+      "instances": false, 
+      "readable": "Sky", 
+      "name": "nature--sky", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        255, 
+        255
+      ], 
+      "instances": false, 
+      "readable": "Snow", 
+      "name": "nature--snow", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        152, 
+        251, 
+        152
+      ], 
+      "instances": false, 
+      "readable": "Terrain", 
+      "name": "nature--terrain", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        107, 
+        142, 
+        35
+      ], 
+      "instances": false, 
+      "readable": "Vegetation", 
+      "name": "nature--vegetation", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        170, 
+        30
+      ], 
+      "instances": false, 
+      "readable": "Water", 
+      "name": "nature--water", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        255, 
+        255, 
+        128
+      ], 
+      "instances": true, 
+      "readable": "Banner", 
+      "name": "object--banner", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        250, 
+        0, 
+        30
+      ], 
+      "instances": true, 
+      "readable": "Bench", 
+      "name": "object--bench", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Bike Rack", 
+      "name": "object--bike-rack", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        220, 
+        220, 
+        220
+      ], 
+      "instances": true, 
+      "readable": "Billboard", 
+      "name": "object--billboard", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        170, 
+        170, 
+        170
+      ], 
+      "instances": true, 
+      "readable": "Catch Basin", 
+      "name": "object--catch-basin", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        222, 
+        40, 
+        40
+      ], 
+      "instances": true, 
+      "readable": "CCTV Camera", 
+      "name": "object--cctv-camera", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        100, 
+        170, 
+        30
+      ], 
+      "instances": true, 
+      "readable": "Fire Hydrant", 
+      "name": "object--fire-hydrant", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        40, 
+        40, 
+        40
+      ], 
+      "instances": true, 
+      "readable": "Junction Box", 
+      "name": "object--junction-box", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        33, 
+        33, 
+        33
+      ], 
+      "instances": true, 
+      "readable": "Mailbox", 
+      "name": "object--mailbox", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        170, 
+        170, 
+        170
+      ], 
+      "instances": true, 
+      "readable": "Manhole", 
+      "name": "object--manhole", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        142
+      ], 
+      "instances": true, 
+      "readable": "Phone Booth", 
+      "name": "object--phone-booth", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        170, 
+        170, 
+        170
+      ], 
+      "instances": false, 
+      "readable": "Pothole", 
+      "name": "object--pothole", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        210, 
+        170, 
+        100
+      ], 
+      "instances": true, 
+      "readable": "Street Light", 
+      "name": "object--street-light", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        153, 
+        153, 
+        153
+      ], 
+      "instances": true, 
+      "readable": "Pole", 
+      "name": "object--support--pole", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        128, 
+        128, 
+        128
+      ], 
+      "instances": true, 
+      "readable": "Traffic Sign Frame", 
+      "name": "object--support--traffic-sign-frame", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        142
+      ], 
+      "instances": true, 
+      "readable": "Utility Pole", 
+      "name": "object--support--utility-pole", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        250, 
+        170, 
+        30
+      ], 
+      "instances": true, 
+      "readable": "Traffic Light", 
+      "name": "object--traffic-light", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        192, 
+        192, 
+        192
+      ], 
+      "instances": true, 
+      "readable": "Traffic Sign (Back)", 
+      "name": "object--traffic-sign--back", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        220, 
+        220, 
+        0
+      ], 
+      "instances": true, 
+      "readable": "Traffic Sign (Front)", 
+      "name": "object--traffic-sign--front", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        180, 
+        165, 
+        180
+      ], 
+      "instances": true, 
+      "readable": "Trash Can", 
+      "name": "object--trash-can", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        119, 
+        11, 
+        32
+      ], 
+      "instances": true, 
+      "readable": "Bicycle", 
+      "name": "object--vehicle--bicycle", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        142
+      ], 
+      "instances": true, 
+      "readable": "Boat", 
+      "name": "object--vehicle--boat", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        60, 
+        100
+      ], 
+      "instances": true, 
+      "readable": "Bus", 
+      "name": "object--vehicle--bus", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        142
+      ], 
+      "instances": true, 
+      "readable": "Car", 
+      "name": "object--vehicle--car", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        90
+      ], 
+      "instances": true, 
+      "readable": "Caravan", 
+      "name": "object--vehicle--caravan", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        230
+      ], 
+      "instances": true, 
+      "readable": "Motorcycle", 
+      "name": "object--vehicle--motorcycle", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        80, 
+        100
+      ], 
+      "instances": false, 
+      "readable": "On Rails", 
+      "name": "object--vehicle--on-rails", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        128, 
+        64, 
+        64
+      ], 
+      "instances": true, 
+      "readable": "Other Vehicle", 
+      "name": "object--vehicle--other-vehicle", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        110
+      ], 
+      "instances": true, 
+      "readable": "Trailer", 
+      "name": "object--vehicle--trailer", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        70
+      ], 
+      "instances": true, 
+      "readable": "Truck", 
+      "name": "object--vehicle--truck", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        192
+      ], 
+      "instances": true, 
+      "readable": "Wheeled Slow", 
+      "name": "object--vehicle--wheeled-slow", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        32, 
+        32, 
+        32
+      ], 
+      "instances": false, 
+      "readable": "Car Mount", 
+      "name": "void--car-mount", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        0
+      ], 
+      "instances": false, 
+      "readable": "Ego Vehicle", 
+      "name": "void--ego-vehicle", 
+      "evaluate": true
+    }, 
+    {
+      "color": [
+        0, 
+        0, 
+        0
+      ], 
+      "instances": false, 
+      "readable": "Unlabeled", 
+      "name": "void--unlabeled", 
+      "evaluate": false
+    }
+  ], 
+  "version": 1.0, 
+  "mapping": "public", 
+  "folder_structure": "{split}/{content}/{key:.{22}}.{ext}"
+}
