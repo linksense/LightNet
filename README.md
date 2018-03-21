@@ -3,8 +3,8 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 " (underway) by Huijun Liu @ TU Braunschweig.
 
 - **MobileNetV2Plus**: Modified MobileNetV2 + Spatial-Channel Sequeeze & Excitation (SCSE) + ASPP + Encoder-Decoder Arch. + InplaceABN.
-- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch + InplaceABN.
-- **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + Receptive Field Block (RFB) + Encoder-Decoder Arch + InplaceABN.
+- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB) + Encoder-Decoder Arch + InplaceABN.
+- **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch + InplaceABN.
 - **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet + SCSE + ASPP/RFB + InplaceABN.
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE) + SCSE/SE + ASPP/RFB + InplaceABN.
 - **ShuffleNetPlus**: Modified ShuffleNet + SCSE + ASPP/RFB + Encoder-Decoder Arch + InplaceABN.
