@@ -2,7 +2,7 @@
 This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation
 " (underway) by Huijun Liu @ TU Braunschweig.
 
-- **MobileNetV2Plus**: Modified MobileNetV2 + Spatial-Channel Sequeeze & Excitation (SCSE) + ASPP + Encoder-Decoder Arch. + InplaceABN.
+- **MobileNetV2Plus**: Modified MobileNetV2[1] + Spatial-Channel Sequeeze & Excitation (SCSE) + ASPP + Encoder-Decoder Arch. + InplaceABN.
 - **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB) + Encoder-Decoder Arch. + InplaceABN.
 - **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet + SCSE + ASPP/RFB + InplaceABN.
@@ -91,4 +91,22 @@ We are working on the implementation on other frameworks.
 Any discussions or concerns are welcomed!
 
 ## References
-underway...
+[1]. [Inverted Residuals and Linear Bottlenecks: Mobile Networks for Classification, Detection and Segmentation](https://arxiv.org/abs/1801.04381v2)  
+[2]. [Rethinking Atrous Convolution for Semantic Image Segmentation](https://arxiv.org/abs/1706.05587v3)  
+[3]. [Encoder-Decoder with Atrous Separable Convolution for Semantic Image Segmentation](https://arxiv.org/abs/1802.02611v2)  
+[4]. [In-Place Activated BatchNorm for Memory-Optimized Training of DNNs](https://arxiv.org/abs/1712.02616v2)  
+[5]. [Receptive Field Block Net for Accurate and Fast Object Detection](https://arxiv.org/abs/1711.07767v2)  
+[6]. [Concurrent Spatial and Channel Squeeze & Excitation in Fully Convolutional Networks](https://arxiv.org/abs/1803.02579v1)  
+[7]. [Squeeze-and-Excitation Networks](https://arxiv.org/abs/1709.01507v1)  
+[8]. [MobileNets: Efficient Convolutional Neural Networks for Mobile Vision Applications](https://arxiv.org/abs/1704.04861v1)  
+[9]. [ShuffleNet: An Extremely Efficient Convolutional Neural Network for Mobile Devices](https://arxiv.org/abs/1707.01083v2)  
+[10]. [Averaging Weights Leads to Wider Optima and Better Generalization](https://arxiv.org/abs/1803.05407v1)  
+[11]. [A mixed-scale dense convolutional neural network for image analysis](https://slidecam-camera.lbl.gov/static/asset/PNAS.pdf)  
+[12]. [Dual Path Networks](https://arxiv.org/abs/1707.01629v2)  
+[13]. [Wide Residual Networks](https://arxiv.org/abs/1605.07146v4)  
+[14]. [Densely Connected Convolutional Networks](https://arxiv.org/abs/1608.06993v5)  
+[15]. [CondenseNet: An Efficient DenseNet using Learned Group Convolutions](https://arxiv.org/abs/1711.09224v1)  
+[16]. [Full-Resolution Residual Networks for Semantic Segmentation in Street Scenes](https://arxiv.org/abs/1611.08323v2)  
+[17]. [High-Resolution Image Synthesis and Semantic Manipulation with Conditional GANs](https://arxiv.org/abs/1711.11585v1)  
+[18]. [SGDR: Stochastic Gradient Descent with Warm Restarts](https://arxiv.org/abs/1608.03983v5)  
+[18]. [Cyclical Learning Rates for Training Neural Networks](https://arxiv.org/abs/1506.01186v6)  
