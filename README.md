@@ -13,8 +13,11 @@ so if you like, welcome to experiment with other under-training models and my id
 5. [Contacts](#contacts)
 
 ## Introduction
-Semantic Segmentation is a significant part of the modern autonomous driving system, as exact understanding the surrounding scene is very important for the navigation and driving decision of the self-driving car. Nowadays, deep fully convolutional networks (FCNs) have a very significant effect on semantic segmentation, but most of the relevant researchs have focused on improving segmentation accuracy rather than model computation efficiency. However, the autonomous driving system is often based on embedded devices, where computing and storage resources are relatively limited. In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce concurrent Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by
-multiply-add (MAdd), as well as the number of parameters.
+Semantic Segmentation is a significant part of the modern autonomous driving system, as exact understanding the surrounding scene is very important for the navigation and driving decision of the self-driving car. 
+Nowadays, deep fully convolutional networks (FCNs) have a very significant effect on semantic segmentation, but most of the relevant researchs have focused on improving segmentation accuracy rather than model computation efficiency. 
+However, the autonomous driving system is often based on embedded devices, where computing and storage resources are relatively limited. 
+In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce GAN for data augmentation([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent Spatial-Channel Sequeeze & Excitation (SCSE) and Receptive Field Block (RFB) to the proposed network. 
+We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
 
 ### Network Architecture
 underway...
