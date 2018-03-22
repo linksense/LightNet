@@ -135,7 +135,9 @@ if __name__ == '__main__':
     from modules import InPlaceABNWrapper
     from models.sewrnetv2 import SEWiderResNetV2
     from models.mobilenetv2plus import MobileNetV2Plus
+    from models.shufflenetv2plus import ShuffleNetV2Plus
     from models.rfmobilenetv2plus import RFMobileNetV2Plus
+    from models.mixscaledensenet import MixedScaleDenseNet
 
     net_h, net_w = 448, 896
 
@@ -143,12 +145,22 @@ if __name__ == '__main__':
     model = RFMobileNetV2Plus(n_class=19, in_size=(net_h, net_w), width_mult=1.0,
                             out_sec=256, aspp_sec=(12, 24, 36),
                             norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1))
-    """
+
 
     model = SEWiderResNetV2(structure=[3, 3, 6, 3, 1, 1],
                             norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1),
                             classes=19, dilation=True, is_se=True, in_size=(net_h, net_w),
                             aspp_out=512, fusion_out=64, aspp_sec=(12, 24, 36))
+
+    model = ShuffleNetV2Plus(n_class=19, groups=3, in_channels=3, in_size=(net_h, net_w),
+                             out_sec=256, aspp_sec=(12, 24, 36),
+                             norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1))
+    """
+    model = MixedScaleDenseNet(n_class=19, in_size=(net_h, net_w), num_layers=96, in_chns=32,
+                               squeeze_ratio=1.0 / 32, out_chns=1,
+                               dilate_sec=(1, 2, 4, 8, 16),
+                               aspp_sec=(24, 48, 72),
+                               norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1))
 
     model.cuda()
 
