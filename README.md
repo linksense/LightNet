@@ -37,7 +37,9 @@ In this paper we describe several light-weight networks based on MobileNetV2, Ad
 We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
 
 ### Network Architecture
-underway...
+<p align="center">
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/MobileNetV2Plus%26RF-MobileNetV2Plus.png" />
+</p>
 
 ## Usage
 
