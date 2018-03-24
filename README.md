@@ -16,7 +16,7 @@ so if you like, welcome to experiment with other under-training models and my id
 
 <p align="center">
 <a href="https://youtu.be/0g9zDGSRBi0" target="_blank">
-<img src="https://github.com/ansleliu/LightNet/blob/master/resource/cityscapes_demo_lightnet.gif" width="480" height="226" />
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/cityscapes_demo_lightnet.gif" width="896" height="384" />
 </a>
 </p>
 
