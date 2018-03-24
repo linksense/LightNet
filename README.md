@@ -39,7 +39,11 @@ We measure our performance on Cityscapes pixel-level segmentation, and achieve 7
 ### Network Architecture
 <p align="center">
 <img src="https://github.com/ansleliu/LightNet/blob/master/resource/MobileNetV2Plus%26RF-MobileNetV2Plus.png" />
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/ASPP.png" />
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/Original-RFBlock.png" />
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/SCSE.png" />
 </p>
+
 
 ## Usage
 
