@@ -104,3 +104,78 @@ def bootstrapped_cross_entropy2d(input, target, K, weight=None, size_average=Fal
                                            weight=weight,
                                            size_average=size_average)
     return loss / float(batch_size)
+
+
+class FocalLoss2D(nn.Module):
+    """
+    Focal Loss, which is proposed in:
+        "Focal Loss for Dense Object Detection (https://arxiv.org/abs/1708.02002v2)"
+    """
+    def __init__(self, num_classes=19, ignore_label=250, alpha=0.25, gamma=2, size_average=True):
+        """
+        Loss(x, class) = - \alpha (1-softmax(x)[class])^gamma \log(softmax(x)[class])
+
+        :param num_classes:   (int) num of the classes
+        :param ignore_label:  (int) ignore label
+        :param alpha:         (1D Tensor or Variable) the scalar factor
+        :param gamma:         (float) gamma > 0;
+                                      reduces the relative loss for well-classified examples (probabilities > .5),
+                                      putting more focus on hard, mis-classified examples
+        :param size_average:  (bool): By default, the losses are averaged over observations for each mini-batch.
+                                      If the size_average is set to False, the losses are
+                                      instead summed for each mini-batch.
+        """
+        super(FocalLoss2D, self).__init__()
+        self.alpha = alpha
+        self.gamma = gamma
+        self.num_classes = num_classes
+        self.ignore_label = ignore_label
+        self.size_average = size_average
+        self.one_hot = Variable(torch.eye(self.num_classes))
+
+    def forward(self, cls_preds, cls_targets):
+        """
+
+        :param cls_preds:    (n, c, h, w)
+        :param cls_targets:  (n, h, w)
+        :return:
+        """
+        assert not cls_targets.requires_grad
+        assert cls_targets.dim() == 3
+        assert cls_preds.size(0) == cls_targets.size(0), "{0} vs {1} ".format(cls_preds.size(0), cls_targets.size(0))
+        assert cls_preds.size(2) == cls_targets.size(1), "{0} vs {1} ".format(cls_preds.size(2), cls_targets.size(1))
+        assert cls_preds.size(3) == cls_targets.size(2), "{0} vs {1} ".format(cls_preds.size(3), cls_targets.size(3))
+
+        if cls_preds.is_cuda:
+            self.one_hot = self.one_hot.cuda()
+
+        n, c, h, w = cls_preds.size()
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+        # 1. target reshape and one-hot encode
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+        # 1.1. target: (n*h*w,)
+        cls_targets = cls_targets.view(n * h * w, 1)
+        target_mask = (cls_targets >= 0) * (cls_targets != self.ignore_label)
+
+        cls_targets = cls_targets[target_mask]
+        cls_targets = self.one_hot.index_select(dim=0, index=cls_targets)
+
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+        # 2. compute focal loss for multi-classification
+        # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+        # 2.1. The softmax. prob: (n, c, h, w)
+        prob = F.softmax(cls_preds, dim=1)
+        # 2.2. prob: (n*h*w, c) - contiguous() required if transpose() is used before view().
+        prob = prob.transpose(1, 2).transpose(2, 3).contiguous().view(-1, c)
+        prob = prob[target_mask.repeat(1, c)]
+        prob = prob.view(-1, c)  # (n*h*w, c)
+
+        probs = torch.clamp((prob * cls_targets).sum(1).view(-1, 1), min=1e-8, max=1.0)
+        batch_loss = -self.alpha * (torch.pow((1 - probs), self.gamma)) * probs.log()
+
+        if self.size_average:
+            loss = batch_loss.mean()
+        else:
+            loss = batch_loss.sum()
+
+        return loss
