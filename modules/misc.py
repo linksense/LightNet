@@ -33,6 +33,37 @@ class CatInPlaceABN(nn.Module):
         return x
 
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
+# InplaceABNConv for Large Separable Convolution Block
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
+class LightHeadBlock(nn.Module):
+    def __init__(self, in_chs, mid_chs=256, out_chs=256, kernel_size=15, norm_act=ABN):
+        super(LightHeadBlock, self).__init__()
+        pad = int((kernel_size - 1) / 2)
+
+        # kernel size had better be odd number so as to avoid alignment error
+        self.abn = norm_act(in_chs)
+        self.conv_l = nn.Sequential(OrderedDict([("conv_lu", nn.Conv2d(in_chs, mid_chs,
+                                                                       kernel_size=(kernel_size, 1),
+                                                                       padding=(pad, 0))),
+                                                 ("conv_ld", nn.Conv2d(mid_chs, out_chs,
+                                                                       kernel_size=(1, kernel_size),
+                                                                       padding=(0, pad)))]))
+
+        self.conv_r = nn.Sequential(OrderedDict([("conv_ru", nn.Conv2d(in_chs, mid_chs,
+                                                                       kernel_size=(1, kernel_size),
+                                                                       padding=(0, pad))),
+                                                 ("conv_rd", nn.Conv2d(mid_chs, out_chs,
+                                                                       kernel_size=(kernel_size, 1),
+                                                                       padding=(pad, 0)))]))
+
+    def forward(self, x):
+        x = self.abn(x)
+        x_l = self.conv_l(x)
+        x_r = self.conv_r(x)
+        return torch.add(x_l, 1, x_r)
+
+
 class SEBlock(nn.Module):
     def __init__(self, channel, reduction=16):
         super(SEBlock, self).__init__()
@@ -77,6 +108,31 @@ class SCSEBlock(nn.Module):
         spa_se = self.spatial_se(x)
         spa_se = torch.mul(x, spa_se)
         return torch.add(chn_se, 1, spa_se)
+
+
+class ModifiedSCSEBlock(nn.Module):
+    def __init__(self, channel, reduction=16):
+        super(ModifiedSCSEBlock, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool2d(1)
+
+        self.channel_excitation = nn.Sequential(nn.Linear(channel, int(channel//reduction)),
+                                                nn.ReLU(inplace=True),
+                                                nn.Linear(int(channel//reduction), channel),
+                                                nn.Sigmoid())
+
+        self.spatial_se = nn.Sequential(nn.Conv2d(channel, 1, kernel_size=1,
+                                                  stride=1, padding=0, bias=False),
+                                        nn.Sigmoid())
+
+    def forward(self, x):
+        bahs, chs, _, _ = x.size()
+
+        # Returns a new tensor with the same data as the self tensor but of a different size.
+        chn_se = self.avg_pool(x).view(bahs, chs)
+        chn_se = self.channel_excitation(chn_se).view(bahs, chs, 1, 1)
+
+        spa_se = self.spatial_se(x)
+        return torch.mul(torch.mul(x, chn_se), spa_se)
 
 
 class ASPPBlock(nn.Module):
@@ -225,6 +281,87 @@ class ASPPInPlaceABNBlock(nn.Module):
 
         out = self.aspp_catdown(x)
         return out, self.upsampling(out)
+
+
+class SDASPPInPlaceABNBlock(nn.Module):
+    def __init__(self, in_chs, out_chs, feat_res=(56, 112),
+                 up_ratio=2, aspp_sec=(12, 24, 36), norm_act=ABN):
+        super(SDASPPInPlaceABNBlock, self).__init__()
+
+        self.in_norm = norm_act(in_chs)
+        self.gave_pool = nn.Sequential(OrderedDict([("gavg", nn.AdaptiveAvgPool2d((1, 1))),
+                                                    ("conv1_0", nn.Conv2d(in_chs, out_chs,
+                                                                          kernel_size=1, stride=1, padding=0,
+                                                                          groups=1, bias=False, dilation=1)),
+                                                    ("up0", nn.Upsample(size=feat_res, mode='bilinear'))]))
+
+        self.conv1x1 = nn.Sequential(OrderedDict([("conv1_1", nn.Conv2d(in_chs, out_chs, kernel_size=1,
+                                                                        stride=1, padding=0, bias=False,
+                                                                        groups=1, dilation=1))]))
+
+        self.aspp_bra1 = nn.Sequential(OrderedDict([("dconv2_1", nn.Conv2d(in_chs, in_chs, kernel_size=3,
+                                                                           stride=1, padding=aspp_sec[0], bias=False,
+                                                                           groups=in_chs, dilation=aspp_sec[0])),
+                                                    ("pconv2_1", nn.Conv2d(in_chs, out_chs, kernel_size=1,
+                                                                           stride=1, padding=0, bias=False,
+                                                                           groups=1, dilation=1))]))
+
+        self.aspp_bra2 = nn.Sequential(OrderedDict([("dconv2_2", nn.Conv2d(in_chs, in_chs, kernel_size=3,
+                                                                           stride=1, padding=aspp_sec[1], bias=False,
+                                                                           groups=in_chs, dilation=aspp_sec[1])),
+                                                    ("pconv2_2", nn.Conv2d(in_chs, out_chs, kernel_size=1,
+                                                                           stride=1, padding=0, bias=False,
+                                                                           groups=1, dilation=1))]))
+
+        self.aspp_bra3 = nn.Sequential(OrderedDict([("dconv2_3", nn.Conv2d(in_chs, in_chs, kernel_size=3,
+                                                                           stride=1, padding=aspp_sec[2], bias=False,
+                                                                           groups=in_chs, dilation=aspp_sec[2])),
+                                                    ("pconv2_3", nn.Conv2d(in_chs, out_chs, kernel_size=1,
+                                                                           stride=1, padding=0, bias=False,
+                                                                           groups=1, dilation=1))]))
+
+        self.aspp_catdown = nn.Sequential(OrderedDict([("norm_act", norm_act(5*out_chs)),
+                                                       ("conv_down", nn.Conv2d(5*out_chs, out_chs, kernel_size=1,
+                                                                               stride=1, padding=1, bias=False,
+                                                                               groups=1, dilation=1)),
+                                                       ("dropout", nn.Dropout2d(p=0.2, inplace=True))]))
+
+        self.upsampling = nn.Upsample(size=(int(feat_res[0]*up_ratio), int(feat_res[1]*up_ratio)), mode='bilinear')
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+    # channel_shuffle: shuffle channels in groups
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+    @staticmethod
+    def _channel_shuffle(x, groups):
+        """
+        Channel shuffle operation
+        :param x: input tensor
+        :param groups: split channels into groups
+        :return: channel shuffled tensor
+        """
+        batch_size, num_channels, height, width = x.data.size()
+
+        channels_per_group = num_channels // groups
+
+        # reshape
+        x = x.view(batch_size, groups, channels_per_group, height, width)
+
+        # transpose
+        # - contiguous() required if transpose() is used before view().
+        #   See https://github.com/pytorch/pytorch/issues/764
+        x = torch.transpose(x, 1, 2).contiguous().view(batch_size, -1, height, width)
+
+        return x
+
+    def forward(self, x):
+        x = self.in_norm(x)
+        x = torch.cat([self.gave_pool(x),
+                       self.conv1x1(x),
+                       self.aspp_bra1(x),
+                       self.aspp_bra2(x),
+                       self.aspp_bra3(x)], dim=1)
+
+        return self.upsampling(self.aspp_catdown(x))
 
 
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #

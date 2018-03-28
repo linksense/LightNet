@@ -1,5 +1,7 @@
+from torch.autograd import Variable
 import torch.nn.functional as F
 import torch.nn as nn
+import numpy as np
 import torch
 
 
@@ -179,3 +181,35 @@ class FocalLoss2D(nn.Module):
             loss = batch_loss.sum()
 
         return loss
+
+
+class SemanticEncodingLoss(nn.Module):
+    def __init__(self, num_classes=19, ignore_label=250, alpha=0.25):
+        super(SemanticEncodingLoss, self).__init__()
+        self.alpha = alpha
+
+        self.num_classes = num_classes
+        self.ignore_label = ignore_label
+
+    def unique_encode(self, cls_targets):
+        batch_size, _, _ = cls_targets.size()
+        target_mask = (cls_targets >= 0) * (cls_targets != self.ignore_label)
+        cls_targets = [cls_targets[idx].masked_select(target_mask[idx]) for idx in np.arange(batch_size)]
+
+        # unique_cls = [np.unique(label.numpy(), return_counts=True) for label in cls_targets]
+        unique_cls = [np.unique(label.numpy()) for label in cls_targets]
+
+        encode = np.zeros((batch_size, self.num_classes), dtype=np.uint8)
+
+        for idx in np.arange(batch_size):
+            np.put(encode[idx], unique_cls[idx], 1)
+
+        return torch.from_numpy(encode).float()
+
+    def forward(self, predicts, enc_cls_target, size_average=True):
+        se_loss = F.binary_cross_entropy_with_logits(predicts, enc_cls_target, weight=None,
+                                                     size_average=size_average)
+
+        return self.alpha * se_loss
+
+

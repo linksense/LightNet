@@ -9,7 +9,7 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#references)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
-**!!!New!!!**: add **Group Normalization**<sup>[[20]](#references)</sup>
+**!!!New!!!**: add **Semantic Encoding Loss and Context Encoding Module**<sup>[[21]](#references)</sup>
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
@@ -129,6 +129,7 @@ Any discussions or concerns are welcomed!
 [18]. [SGDR: Stochastic Gradient Descent with Warm Restarts](https://arxiv.org/abs/1608.03983v5)  
 [19]. [Cyclical Learning Rates for Training Neural Networks](https://arxiv.org/abs/1506.01186v6)  
 [20]. [Group Normalization](https://128.84.21.199/abs/1803.08494v1)  
+[21]. [Context Encoding for Semantic Segmentation](https://arxiv.org/abs/1803.08904v1)  
 
 
 # Acknowledgement
