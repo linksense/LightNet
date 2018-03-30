@@ -2,8 +2,8 @@
 This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation
 " (underway) by Huijun Liu @ TU Braunschweig.
 
-- **MobileNetV2Plus**: Modified MobileNetV2<sup>[[1,8]](#references)</sup> + Spatial-Channel Sequeeze & Excitation (SCSE)<sup>[[6]](#references)</sup> + ASPP<sup>[[2,3]](#references)</sup> + Encoder-Decoder Arch.<sup>[[3]](#references)</sup> + InplaceABN<sup>[[4]](#references)</sup>.
-- **RF-MobileNetV2Plus**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB)<sup>[[5]](#references)</sup> + Encoder-Decoder Arch. + InplaceABN.
+- **[MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1157)**: Modified MobileNetV2<sup>[[1,8]](#references)</sup> + Spatial-Channel Sequeeze & Excitation (SCSE)<sup>[[6]](#references)</sup> + ASPP<sup>[[2,3]](#references)</sup> + Encoder-Decoder Arch.<sup>[[3]](#references)</sup> + InplaceABN<sup>[[4]](#references)</sup>.
+- **[RF-MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1172)**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB)<sup>[[5]](#references)</sup> + Encoder-Decoder Arch. + InplaceABN.
 - **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet<sup>[[11]](#references)</sup> + SCSE + ASPP/RFB + InplaceABN.
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
@@ -95,8 +95,9 @@ Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, S
 | Model | GFLOPs | Params |gtFine/gtCoarse/GAN| mIoU Classes(val./test) | mIoU Cat.(val./test) | Result(*.cvs) | Pytorch Model&Checkpoint |
 |---|---|---|---|---|---|---|---|
 |MobileNetV2Plus|117.1?|8.3M|Yes/No/No|70.13/68.90|87.95/86.85|[GoogleDrive](https://drive.google.com/open?id=1D7maZzuunop_CJHeFIkuqv2gFEoxUanq)|/|
-|MobileNetV2Plus|117.1?|8.3M|Yes/No/Yes|73.89/**70.72**|88.72/87.64|[GoogleDrive](https://drive.google.com/open?id=1b1NJhe4sQ126d7xqg-d9mf8WNTstAoER)|[GoogleDrive](https://drive.google.com/open?id=19s7mdCJqTgZ17hgN7_t17sP-RM_FibmW)|
-|RF-MobileNetV2Plus|87.6?|8.6M|Yes/No/Yes|72.37/70.68|88.31/**88.27**|[GoogleDrive](https://drive.google.com/open?id=1JmB5KNmMV92yk5qtjwZnX-ZOhU35Pk6Y)|[GoogleDrive](https://drive.google.com/open?id=1QKLJ7u3DKKOTrMGQCFOprqQZWVrmWQm7)|
+|MobileNetV2SDASPP|?|?M|Yes/No/Yes|73.17/70.09|87.98/87.84|[GoogleDrive](https://drive.google.com/open?id=1tiECuwuQ8S8rx4H94pkemqozX39Seusn)|[GoogleDrive](https://drive.google.com/open?id=1umpCqNk_2XovkvTTNKLct0p7P6NaN-0w)|
+|[MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1157)|117.1?|8.3M|Yes/No/Yes|73.89/**70.72**|88.72/87.64|[GoogleDrive](https://drive.google.com/open?id=1b1NJhe4sQ126d7xqg-d9mf8WNTstAoER)|[GoogleDrive](https://drive.google.com/open?id=19s7mdCJqTgZ17hgN7_t17sP-RM_FibmW)|
+|[RF-MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1172)|87.6?|8.6M|Yes/No/Yes|72.37/70.68|88.31/**88.27**|[GoogleDrive](https://drive.google.com/open?id=1JmB5KNmMV92yk5qtjwZnX-ZOhU35Pk6Y)|[GoogleDrive](https://drive.google.com/open?id=1QKLJ7u3DKKOTrMGQCFOprqQZWVrmWQm7)|
 |ShuffleNetPlus|229.3?|15.3M|Yes/No/Yes|*|*|*|*|
 |Mixed-scale DenseNet|49.9?|0.80M|Yes/No/Yes|*|*|*|*|
 |SE-WResNetV2|?|?M|Yes/No/No|80.13/77.15|90.87/90.59|[GoogleDrive](https://drive.google.com/open?id=1MIJL6cfoBt3opcPWeNfudXLimE42Ow6_)|/|
