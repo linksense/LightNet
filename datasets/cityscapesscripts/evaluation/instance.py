@@ -3,6 +3,9 @@
 # Instance class
 #
 
+import json
+
+
 class Instance(object):
     instID     = 0
     labelID    = 0
