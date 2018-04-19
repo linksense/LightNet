@@ -13,7 +13,7 @@ from tqdm import tqdm
 
 from scripts.loss import SemanticEncodingLoss, bootstrapped_cross_entropy2d
 from scripts.utils import update_aggregated_weight_average
-from models.rfmobilenetv2context import MobileNetV2Context
+from models.mobilenetv2exfuse import MobileNetV2ExFuse
 from scripts.utils import cosine_annealing_lr
 from scripts.utils import poly_topk_scheduler
 from scripts.utils import set_optimizer_lr
@@ -26,7 +26,7 @@ from functools import partial
 
 def train(args, data_root, save_root):
     weight_dir = "{}weights/".format(save_root)
-    log_dir = "{}logs/MobileNetV2Context-{}".format(save_root, time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
+    log_dir = "{}logs/MobileNetV2ExFuse-{}".format(save_root, time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     # 1. Setup Augmentations
@@ -61,8 +61,9 @@ def train(args, data_root, save_root):
     print("> # +++++++++++++++++++++++++++++++++++++++++++++++++++++++ #")
     print("> 1. Setting up Model...")
 
-    model = MobileNetV2Context(n_class=19, in_size=(net_h, net_w), width_mult=1., out_sec=256, context=(32, 4),
-                               norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1))
+    model = MobileNetV2ExFuse(n_class=19, in_size=(net_h, net_w), width_mult=1.0, out_sec=256,
+                              norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1),
+                              traval="train")
 
     # np.arange(torch.cuda.device_count())
     model = torch.nn.DataParallel(model, device_ids=[0]).cuda()
@@ -79,6 +80,8 @@ def train(args, data_root, save_root):
     # 4.2 Setup Loss
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     class_weight = None
+    se_loss = None
+    ce_loss = None
     if hasattr(model.module, 'loss'):
         print('> Using custom loss')
         loss_fn = model.module.loss
@@ -150,7 +153,7 @@ def train(args, data_root, save_root):
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     writer = None
     if args.visdom:
-        writer = SummaryWriter(log_dir=log_dir, comment="MobileNetV2Context")
+        writer = SummaryWriter(log_dir=log_dir, comment="MobileNetV2ExFuse")
 
     if args.visdom:
         dummy_input = Variable(torch.rand(1, 3, net_h, net_w).cuda(), requires_grad=True)
@@ -204,7 +207,7 @@ def train(args, data_root, save_root):
             ce_labels = Variable(labels.cuda(), requires_grad=False)
 
             optimizer.zero_grad()
-            enc1, enc2, net_out = model(images)  # Here we have 3 output for 3 loss
+            enc1, enc2, enc3, enc4, enc5, enc6, enc7, net_out = model(images)  # Here we have 3 output for 3 loss
 
             topk = topk_base * 512
             if random.random() < 0.20:
@@ -213,21 +216,34 @@ def train(args, data_root, save_root):
             else:
                 train_ce_loss = ce_loss(input=net_out, target=ce_labels, K=topk,
                                         weight=None, size_average=True)
-            
+
             train_se_loss1 = se_loss(predicts=enc1, enc_cls_target=se_labels, size_average=True)
             train_se_loss2 = se_loss(predicts=enc2, enc_cls_target=se_labels, size_average=True)
+            train_se_loss3 = se_loss(predicts=enc3, enc_cls_target=se_labels, size_average=True)
+            train_se_loss4 = se_loss(predicts=enc4, enc_cls_target=se_labels, size_average=True)
+            train_se_loss5 = se_loss(predicts=enc5, enc_cls_target=se_labels, size_average=True)
+            train_se_loss6 = se_loss(predicts=enc6, enc_cls_target=se_labels, size_average=True)
+            train_se_loss7 = se_loss(predicts=enc7, enc_cls_target=se_labels, size_average=True)
 
-            train_loss = train_ce_loss + train_se_loss1 + train_se_loss2
+            train_loss = (train_ce_loss + train_se_loss1 + train_se_loss2 + train_se_loss3 +
+                          train_se_loss4 + train_se_loss5 + train_se_loss6 + train_se_loss7)
 
             last_loss = train_loss.data[0]
             last_ce_loss = train_ce_loss.data[0]
             last_se_loss1 = train_se_loss1.data[0]
             last_se_loss2 = train_se_loss2.data[0]
+            last_se_loss3 = train_se_loss3.data[0]
+            last_se_loss4 = train_se_loss4.data[0]
+            last_se_loss5 = train_se_loss5.data[0]
+            last_se_loss6 = train_se_loss6.data[0]
+            last_se_loss7 = train_se_loss7.data[0]
             pbar.update(1)
             pbar.set_description("> Epoch [%d/%d]" % (epoch + 1, args.n_epoch))
             pbar.set_postfix(Loss=last_loss, CELoss=last_ce_loss,
                              SELoss1=last_se_loss1, SELoss2=last_se_loss2,
-                             TopK=topk_base, LR=batch_lr)
+                             SELoss3=last_se_loss3, SELoss4=last_se_loss4,
+                             SELoss5=last_se_loss5, SELoss6=last_se_loss6,
+                             SELoss7=last_se_loss7, TopK=topk_base, LR=batch_lr)
 
             train_loss.backward()
             optimizer.step()
@@ -239,11 +255,11 @@ def train(args, data_root, save_root):
 
             if (train_i + 1) % 31 == 0:
                 loss_log = "Epoch [%d/%d], Iter: %d, Loss: \t %.4f, CELoss: \t %.4f, " \
-                           "SELoss1: \t %.4f, SELoss2: \t%.4f, " % (epoch + 1, args.n_epoch,
-                                                                    train_i + 1, last_loss,
-                                                                    last_ce_loss,
-                                                                    last_se_loss1,
-                                                                    last_se_loss2)
+                           "SELoss1: \t %.4f, SELoss2: \t%.4f, SELoss3: \t%.4f, " \
+                           "SELoss4: \t%.4f, SELoss5: \t%.4f, SELoss6: \t%.4f," \
+                           "SELoss7: \t%.4f, " % (epoch + 1, args.n_epoch, train_i + 1, last_loss,
+                                                  last_ce_loss, last_se_loss1, last_se_loss2, last_se_loss3,
+                                                  last_se_loss4, last_se_loss5, last_se_loss6, last_se_loss7)
 
                 net_out = F.softmax(net_out, dim=1)
                 pred = net_out.data.max(1)[1].cpu().numpy()
@@ -282,7 +298,7 @@ def train(args, data_root, save_root):
             images = Variable(images.cuda(), volatile=True)
             ce_labels = Variable(labels.cuda(), requires_grad=False)
 
-            enc1, enc2, net_out = model(images)  # Here we have 4 output for 4 loss
+            net_out = model(images)[7]  # Here we have 4 output for 4 loss
 
             topk = topk_base * 512
             val_loss = ce_loss(input=net_out, target=ce_labels, K=topk,
@@ -325,7 +341,7 @@ def train(args, data_root, save_root):
                      "best_iou": best_iou,
                      'model_state': model.state_dict(),
                      'optimizer_state': optimizer.state_dict()}
-            torch.save(state, "{}{}_mobilenetv2context_best_model.pkl".format(weight_dir, args.dataset))
+            torch.save(state, "{}{}_mobilenetv2exfuse_best_model.pkl".format(weight_dir, args.dataset))
 
         # scheduler.step()
         # scheduler.batch_step()
@@ -354,7 +370,7 @@ if __name__ == '__main__':
                         help='Height of the input image')
     parser.add_argument('--n_epoch', nargs='?', type=int, default=200,
                         help='# of the epochs')
-    parser.add_argument('--batch_size', nargs='?', type=int, default=7,
+    parser.add_argument('--batch_size', nargs='?', type=int, default=5,
                         help='Batch Size')
     parser.add_argument('--l_rate', nargs='?', type=float, default=2.5e-3,
                         help='Learning Rate')
@@ -362,7 +378,7 @@ if __name__ == '__main__':
                         help='The ratio to crop the input image')
     parser.add_argument('--resume', nargs='?', type=str, default=None,
                         help='Path to previous saved model to restart from')
-    parser.add_argument('--pre_trained', nargs='?', type=str, default="cityscapes_mobilenetv2context_best_model.pkl",
+    parser.add_argument('--pre_trained', nargs='?', type=str, default="cityscapes_rfmobilenetv2_best_model.pkl",
                         help='Path to pre-trained  model to init from')
     parser.add_argument('--visdom', nargs='?', type=bool, default=True,
                         help='Show visualization(s) on visdom | True by  default')

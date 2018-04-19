@@ -1,5 +1,6 @@
 from torch.autograd import Variable
 import torch.nn.functional as F
+import scripts.utils as utils
 import torch.nn as nn
 import numpy as np
 import torch
@@ -213,3 +214,128 @@ class SemanticEncodingLoss(nn.Module):
         return self.alpha * se_loss
 
 
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
+# Lovasz-Softmax
+# Maxim Berman 2018 ESAT-PSI KU Leuven
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
+def lovasz_grad(gt_sorted):
+    """
+    Computes gradient of the Lovasz extension w.r.t sorted errors
+    See Alg. 1 in paper
+    """
+    p = len(gt_sorted)
+    gts = gt_sorted.sum()
+    intersection = gts - gt_sorted.float().cumsum(0)
+    union = gts + (1 - gt_sorted).float().cumsum(0)
+    jaccard = 1. - intersection / union
+
+    if p > 1:  # cover 1-pixel case
+        jaccard[1:p] = jaccard[1:p] - jaccard[0:-1]
+    return jaccard
+
+
+def iou_binary(preds, labels, EMPTY=1., ignore=None, per_image=True):
+    """
+    IoU for foreground class
+    binary: 1 foreground, 0 background
+    """
+    if not per_image:
+        preds, labels = (preds,), (labels,)
+    ious = []
+    for pred, label in zip(preds, labels):
+        intersection = ((label == 1) & (pred == 1)).sum()
+        union = ((label == 1) | ((pred == 1) & (label != ignore))).sum()
+        if not union:
+            iou = EMPTY
+        else:
+            iou = float(intersection) / union
+        ious.append(iou)
+    iou = utils.mean(ious)    # mean accross images if per_image
+    return 100 * iou
+
+
+def iou(preds, labels, C, EMPTY=1., ignore=None, per_image=False):
+    """
+    Array of IoU for each (non ignored) class
+    """
+    if not per_image:
+        preds, labels = (preds,), (labels,)
+    ious = []
+    for pred, label in zip(preds, labels):
+        iou = []
+        for i in range(C):
+            if i != ignore:  # The ignored label is sometimes among predicted classes (ENet - CityScapes)
+                intersection = ((label == i) & (pred == i)).sum()
+                union = ((label == i) | ((pred == i) & (label != ignore))).sum()
+                if not union:
+                    iou.append(EMPTY)
+                else:
+                    iou.append(float(intersection) / union)
+        ious.append(iou)
+    ious = map(utils.mean, zip(*ious))  # mean accross images if per_image
+    return 100 * np.array(ious)
+
+
+def lovasz_softmax(probas, labels, only_present=False, per_image=False, ignore=None):
+    """
+    Multi-class Lovasz-Softmax loss
+      probas: [B, C, H, W] Variable, class probabilities at each prediction (between 0 and 1)
+      labels: [B, H, W] Tensor, ground truth labels (between 0 and C - 1)
+      only_present: average only on classes present in ground truth
+      per_image: compute the loss per image instead of per batch
+      ignore: void class labels
+    """
+    if per_image:
+        loss = utils.mean(lovasz_softmax_flat(*flatten_probas(prob, lab, ignore), only_present=only_present)
+                          for prob, lab in zip(probas, labels))
+    else:
+        loss = lovasz_softmax_flat(*flatten_probas(probas, labels, ignore), only_present=only_present)
+    return loss
+
+
+def lovasz_softmax_flat(probas, labels, only_present=False):
+    """
+    Multi-class Lovasz-Softmax loss
+      probas: [P, C] Variable, class probabilities at each prediction (between 0 and 1)
+      labels: [P] Tensor, ground truth labels (between 0 and C - 1)
+      only_present: average only on classes present in ground truth
+    """
+    C = probas.size(1)
+    losses = []
+    for c in range(C):
+        fg = (labels == c).float() # foreground for class c
+        if only_present and fg.sum() == 0:
+            continue
+        errors = (fg - probas[:, c]).abs()
+        errors_sorted, perm = torch.sort(errors, 0, descending=True)
+        perm = perm.data
+        fg_sorted = fg[perm]
+        losses.append(torch.dot(errors_sorted, lovasz_grad(fg_sorted)))
+    return utils.mean(losses)
+
+
+def flatten_probas(scores, labels, ignore=None):
+    """
+    Flattens predictions in the batch
+    """
+    B, C, H, W = scores.size()
+    scores = scores.permute(0, 2, 3, 1).contiguous().view(-1, C)  # B * H * W, C = P, C
+    labels = labels.view(-1)
+    if ignore is None:
+        return scores, labels
+    valid = (labels != ignore)
+    vscores = scores[valid.nonzero().squeeze()]
+    vlabels = labels[valid]
+    return vscores, vlabels
+
+
+if __name__ == "__main__":
+    from torch.autograd import Variable
+
+    while True:
+        dummy_in = Variable(torch.randn(2, 3, 32, 32), requires_grad=True)
+        dummy_gt = Variable(torch.LongTensor(2, 32, 32).random_(0, 3))
+
+        dummy_in = F.softmax(dummy_in, dim=1)
+        loss = lovasz_softmax(dummy_in, dummy_gt, ignore=255)
+        print(loss.data[0])

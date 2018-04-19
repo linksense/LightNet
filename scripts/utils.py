@@ -1,4 +1,5 @@
-from modules import InPlaceABN, InPlaceABNSync
+# from modules import InPlaceABN, InPlaceABNSync
+from itertools import filterfalse
 import torch.nn as nn
 import numpy as np
 import torch
@@ -20,7 +21,7 @@ def get_mean_and_std(dataset):
     std.div_(len(dataset))
     return mean, std
 
-
+"""
 def init_weights(model, activation="leaky_relu", slope=0.1, init="kaiming_uniform", gain_multiplier=1):
     for name, m in model.named_modules():
         if isinstance(m, nn.Conv2d):
@@ -50,7 +51,7 @@ def init_weights(model, activation="leaky_relu", slope=0.1, init="kaiming_unifor
         elif isinstance(m, nn.Linear):
             nn.init.xavier_uniform(m.weight, 0.1)
             nn.init.constant(m.bias, 0.0)
-
+"""
 
 def recursive_glob(rootdir='.', suffix=''):
     """Performs recursive glob with given suffix and rootdir
@@ -151,3 +152,24 @@ def update_aggregated_weight_average(model, weight_aws, full_iter, cycle_length)
         weight_aws[name] = (weight_aws[name]*n_model + param.data)/(n_model + 1)
 
     return weight_aws
+
+
+def mean(l, ignore_nan=False, empty=0):
+    """
+    nanmean compatible with generators.
+    """
+    l = iter(l)
+    if ignore_nan:
+        l = filterfalse(np.isnan, l)
+    try:
+        n = 1
+        acc = next(l)
+    except StopIteration:
+        if empty == 'raise':
+            raise ValueError('Empty mean')
+        return empty
+    for n, v in enumerate(l, 2):
+        acc += v
+    if n == 1:
+        return acc
+    return acc / n
