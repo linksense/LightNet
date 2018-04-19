@@ -9,7 +9,7 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#references)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
-**!!!New!!!**: add **Semantic Encoding Loss and Context Encoding Module**<sup>[[21]](#references)</sup>
+**!!!New!!!**: add **Add ExFuse and Lovasz-Softmax Loss**<sup>[[22, 23]](#references)</sup>
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
@@ -131,6 +131,8 @@ Any discussions or concerns are welcomed!
 [19]. [Cyclical Learning Rates for Training Neural Networks](https://arxiv.org/abs/1506.01186v6)  
 [20]. [Group Normalization](https://128.84.21.199/abs/1803.08494v1)  
 [21]. [Context Encoding for Semantic Segmentation](https://arxiv.org/abs/1803.08904v1)  
+[22]. [ExFuse: Enhancing Feature Fusion for Semantic Segmentation](https://arxiv.org/abs/1804.03821v1)  
+[23]. [The Lovász-Softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks](https://arxiv.org/abs/1705.08790v2)  
 
 
 # Acknowledgement
@@ -144,3 +146,4 @@ Any discussions or concerns are welcomed!
 [6]. [Ross Wightman](https://github.com/rwightman): [pytorch-dpn-pretrained](https://github.com/rwightman/pytorch-dpn-pretrained).  
 [7]. [mapillary](https://github.com/mapillary): [inplace_abn](https://github.com/mapillary/inplace_abn).  
 [8]. [Cadene](https://github.com/Cadene): [pretrained-models.pytorch](https://github.com/Cadene/pretrained-models.pytorch).  
+[9]. [Maxim Berman](https://github.com/bermanmaxim): [LovaszSoftmax](https://github.com/bermanmaxim/LovaszSoftmax).  
