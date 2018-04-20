@@ -11,10 +11,9 @@ from torch.autograd import Variable
 from torch.utils import data
 from tqdm import tqdm
 
-from scripts.loss import bootstrapped_cross_entropy2d, cross_entropy2d, lovasz_softmax
+from scripts.loss import bootstrapped_cross_entropy2d, cross_entropy2d
 from scripts.utils import update_aggregated_weight_average
-from models.rfmobilenetv2plus import RFMobileNetV2Plus
-from models.mobilenetv2plus import MobileNetV2Plus
+from models.mobilenetv2vortex import MobileNetV2Vortex
 from scripts.utils import cosine_annealing_lr
 from scripts.utils import poly_topk_scheduler
 from scripts.utils import set_optimizer_lr
@@ -27,7 +26,7 @@ from functools import partial
 
 def train(args, data_root, save_root):
     weight_dir = "{}weights/".format(save_root)
-    log_dir = "{}logs/RFMobileNetV2PlusLovasz-{}".format(save_root, time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
+    log_dir = "{}logs/MobileNetV2Vortex-{}".format(save_root, time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime()))
 
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     # 1. Setup Augmentations
@@ -62,8 +61,7 @@ def train(args, data_root, save_root):
     print("> # +++++++++++++++++++++++++++++++++++++++++++++++++++++++ #")
     print("> 1. Setting up Model...")
 
-    model = RFMobileNetV2Plus(n_class=n_classes, in_size=(net_h, net_w), width_mult=1.0,
-                              out_sec=256, aspp_sec=(12, 24, 36),
+    model = MobileNetV2Vortex(n_class=19, in_size=(net_h, net_w), width_mult=1., out_sec=256, rate_sec=(3, 9, 27),
                               norm_act=partial(InPlaceABNWrapper, activation="leaky_relu", slope=0.1))
     """
 
@@ -97,9 +95,24 @@ def train(args, data_root, save_root):
         print('> Using custom loss')
         loss_fn = model.module.loss
     else:
-        loss_fn = lovasz_softmax
+        # loss_fn = cross_entropy2d
 
-        # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
+        class_weight = np.array([0.05570516, 0.32337477, 0.08998544, 1.03602707, 1.03413147, 1.68195437,
+                                 5.58540548, 3.56563995, 0.12704978, 1.,         0.46783719, 1.34551528,
+                                 5.29974114, 0.28342531, 0.9396095,  0.81551811, 0.42679146, 3.6399074,
+                                 2.78376194], dtype=float)
+
+        """
+        class_weight = np.array([3.045384,  12.862123,   4.509889,  38.15694,  35.25279,  31.482613,
+                                 45.792305,  39.694073,  6.0639296,  32.16484,  17.109228,   31.563286,
+                                 47.333973,  11.610675,  44.60042,   45.23716,  45.283024,  48.14782,
+                                 41.924667], dtype=float)/10.0
+        """
+        class_weight = torch.from_numpy(class_weight).float().cuda()
+        loss_fn = bootstrapped_cross_entropy2d
+        # loss_fn = cross_entropy2d
+
+    # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     # 5. Resume Model
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     best_iou = -100.0
@@ -149,7 +162,9 @@ def train(args, data_root, save_root):
     # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
     writer = None
     if args.tensor_board:
-        writer = SummaryWriter(log_dir=log_dir, comment="RFMobileNetV2PlusLovasz")
+        writer = SummaryWriter(log_dir=log_dir, comment="MobileNetV2Vortex")
+
+    if args.tensor_board:
         dummy_input = Variable(torch.rand(1, 3, net_h, net_w).cuda(), requires_grad=True)
         writer.add_graph(model, dummy_input)
 
@@ -171,6 +186,8 @@ def train(args, data_root, save_root):
     # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=32, gamma=0.1)
     # scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=[30, 80], gamma=0.1)
 
+    topk_init = 512
+    # topk_multipliers = [64, 128, 256, 512]
     for epoch in np.arange(args.start_epoch, args.n_epoch):
         # +++++++++++++++++++++++++++++++++++++++++++++++++++ #
         # 7.1 Mini-Batch Learning
@@ -179,6 +196,7 @@ def train(args, data_root, save_root):
         model.train()
 
         last_loss = 0.0
+        topk_base = topk_init
         pbar = tqdm(np.arange(num_batches))
         for train_i, (images, labels) in enumerate(train_loader):  # One mini-Batch data, One iteration
             full_iter = (epoch * num_batches) + train_i + 1
@@ -189,32 +207,39 @@ def train(args, data_root, save_root):
             batch_lr = args.l_rate * cosine_annealing_lr(lr_period, full_iter)
             optimizer = set_optimizer_lr(optimizer, batch_lr)
 
+            topk_base = poly_topk_scheduler(init_topk=topk_init, iter=full_iter, topk_decay_iter=1,
+                                            max_iter=args.n_epoch*num_batches, power=0.95)
+
             images = Variable(images.cuda(), requires_grad=True)   # Image feed into the deep neural network
             labels = Variable(labels.cuda(), requires_grad=False)
 
             optimizer.zero_grad()
             net_out = model(images)  # Here we have 3 output for 3 loss
-            net_out = F.softmax(net_out, dim=1)
-            loss = lovasz_softmax(net_out, labels, ignore=250)
 
-            last_loss = loss.data[0]
+            topk = topk_base * 512
+            if random.random() < 0.20:
+                train_loss = loss_fn(input=net_out, target=labels, K=topk, weight=class_weight)
+            else:
+                train_loss = loss_fn(input=net_out, target=labels, K=topk, weight=None)
+
+            last_loss = train_loss.data[0]
             pbar.update(1)
             pbar.set_description("> Epoch [%d/%d]" % (epoch + 1, args.n_epoch))
-            pbar.set_postfix(Loss=last_loss, LR=batch_lr)
+            pbar.set_postfix(Loss=last_loss, TopK=topk_base, LR=batch_lr)
 
-            loss.backward()
+            train_loss.backward()
             optimizer.step()
 
             if full_iter % lr_period == 0:
                 swa_weights = update_aggregated_weight_average(model, swa_weights, full_iter, lr_period)
                 state = {'model_state': swa_weights}
-                torch.save(state, "{}{}_rfmobilenetv2_lovasz_swa_model.pkl".format(weight_dir, args.dataset))
+                torch.save(state, "{}{}_mobilenetv2vortex_swa_model.pkl".format(weight_dir, args.dataset))
 
             if (train_i + 1) % 31 == 0:
                 loss_log = "Epoch [%d/%d], Iter: %d Loss: \t %.4f" % (epoch + 1, args.n_epoch,
                                                                       train_i + 1, last_loss)
 
-                # net_out = F.softmax(net_out, dim=1)
+                net_out = F.softmax(net_out, dim=1)
                 pred = net_out.data.max(1)[1].cpu().numpy()
                 gt = labels.data.cpu().numpy()
 
@@ -245,19 +270,22 @@ def train(args, data_root, save_root):
 
         mval_loss = 0.0
         vali_count = 0
-        for i_val, (images, labels) in enumerate(valid_loader):
+        for i_val, (images_val, labels_val) in enumerate(valid_loader):
             vali_count += 1
 
-            images = Variable(images.cuda(), volatile=True)
-            labels = Variable(labels.cuda(), volatile=True)
+            images_val = Variable(images_val.cuda(), volatile=True)
+            labels_val = Variable(labels_val.cuda(), volatile=True)
 
-            net_out = model(images)  # Here we have 4 output for 4 loss
+            net_out = model(images_val)  # Here we have 4 output for 4 loss
+
+            topk = topk_base * 512
+            val_loss = loss_fn(input=net_out, target=labels_val, K=topk, weight=None)
+
+            mval_loss += val_loss.data[0]
+
             net_out = F.softmax(net_out, dim=1)
-            loss = lovasz_softmax(net_out, labels, ignore=250)
-            mval_loss += loss.data[0]
-
             pred = net_out.data.max(1)[1].cpu().numpy()
-            gt = labels.data.cpu().numpy()
+            gt = labels_val.data.cpu().numpy()
             running_metrics.update(gt, pred)
 
         mval_loss /= vali_count
@@ -281,13 +309,16 @@ def train(args, data_root, save_root):
             for name, param in model.named_parameters():
                 writer.add_histogram(name, param.clone().cpu().data.numpy(), epoch)
 
+            # export scalar data to JSON for external processing
+            # writer.export_scalars_to_json("{}/all_scalars.json".format(log_dir))
+
         if score['Mean_IoU'] >= best_iou:
             best_iou = score['Mean_IoU']
             state = {'epoch': epoch + 1,
                      "best_iou": best_iou,
                      'model_state': model.state_dict(),
                      'optimizer_state': optimizer.state_dict()}
-            torch.save(state, "{}{}_rfmobilenetv2_lovasz_best_model.pkl".format(weight_dir, args.dataset))
+            torch.save(state, "{}{}_mobilenetv2vortex_best_model.pkl".format(weight_dir, args.dataset))
 
         # scheduler.step()
         # scheduler.batch_step()
@@ -324,7 +355,7 @@ if __name__ == '__main__':
                         help='The ratio to crop the input image')
     parser.add_argument('--resume', nargs='?', type=str, default=None,
                         help='Path to previous saved model to restart from')
-    parser.add_argument('--pre_trained', nargs='?', type=str, default="cityscapes_rfmobilenetv2_best_model.pkl",
+    parser.add_argument('--pre_trained', nargs='?', type=str, default="mobilenetv2plus_model.pkl",
                         help='Path to pre-trained  model to init from')
     parser.add_argument('--tensor_board', nargs='?', type=bool, default=True,
                         help='Show visualization(s) on tensor_board | True by  default')

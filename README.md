@@ -9,7 +9,7 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#references)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
-**!!!New!!!**: add **Add ExFuse and Lovasz-Softmax Loss**<sup>[[22, 23]](#references)</sup>
+**!!!New!!!**: add **Add Vortex Pooling**<sup>[[22, 23]](#references)</sup>
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
@@ -134,7 +134,8 @@ Any discussions or concerns are welcomed!
 [21]. [Context Encoding for Semantic Segmentation](https://arxiv.org/abs/1803.08904v1)  
 [22]. [ExFuse: Enhancing Feature Fusion for Semantic Segmentation](https://arxiv.org/abs/1804.03821v1)  
 [23]. [The Lovász-Softmax loss: A tractable surrogate for the optimization of the intersection-over-union measure in neural networks](https://arxiv.org/abs/1705.08790v2)  
-
+[24]. [Vortex Pooling: Improving Context Representation in Semantic Segmentation](https://arxiv.org/abs/1804.06242v1)  
+  
 
 # Acknowledgement
 
