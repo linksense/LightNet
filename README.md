@@ -33,8 +33,8 @@ so if you like, welcome to experiment with other under-training models and my id
 Semantic Segmentation is a significant part of the modern autonomous driving system, as exact understanding the surrounding scene is very important for the navigation and driving decision of the self-driving car. 
 Nowadays, deep fully convolutional networks (FCNs) have a very significant effect on semantic segmentation, but most of the relevant researchs have focused on improving segmentation accuracy rather than model computation efficiency. 
 However, the autonomous driving system is often based on embedded devices, where computing and storage resources are relatively limited. 
-In this paper we describe several light-weight networks based on MobileNetV2, Additionally, we introduce **GAN for data augmentation**<sup>[[17]](#references)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent **Spatial-Channel Sequeeze & Excitation** (SCSE) and **Receptive Field Block** (RFB) to the proposed network. 
-We measure our performance on Cityscapes pixel-level segmentation, and achieve 70.72% class mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
+In this paper we describe several light-weight networks based on MobileNetV2, ShuffleNet and Mixed-scale DenseNet for semantic image segmentation task, Additionally, we introduce **GAN for data augmentation**<sup>[[17]](#references)</sup> ([pix2pixHD](https://github.com/NVIDIA/pix2pixHD)) concurrent **Spatial-Channel Sequeeze & Excitation** (SCSE) and **Receptive Field Block** (RFB) to the proposed network. 
+We measure our performance on Cityscapes pixel-level segmentation, and achieve up to **70.72%** class mIoU and **88.27%** cat. mIoU. We evaluate the trade-offs between mIoU, and number of operations measured by multiply-add (MAdd), as well as the number of parameters.
 
 ### Network Architecture
 <p align="center">
@@ -92,7 +92,7 @@ Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, S
 
 ### Results on Cityscapes (Pixel-level/Semantic Segmentation)
 
-| Model | GFLOPs | Params |gtFine/gtCoarse/GAN| mIoU Classes(val./test) | mIoU Cat.(val./test) | Result(*.cvs) | Pytorch Model&Checkpoint |
+| Model | GFLOPs | Params |gtFine/gtCoarse/GAN| mIoU Classes(val./test S.S*) | mIoU Cat.(val./test S.S*) | Result(*.cvs) | Pytorch Model&Checkpoint |
 |---|---|---|---|---|---|---|---|
 |MobileNetV2Plus|117.1?|8.3M|Yes/No/No|70.13/68.90|87.95/86.85|[GoogleDrive](https://drive.google.com/open?id=1D7maZzuunop_CJHeFIkuqv2gFEoxUanq)|/|
 |MobileNetV2SDASPP|?|?M|Yes/No/Yes|73.17/70.09|87.98/87.84|[GoogleDrive](https://drive.google.com/open?id=1tiECuwuQ8S8rx4H94pkemqozX39Seusn)|[GoogleDrive](https://drive.google.com/open?id=1umpCqNk_2XovkvTTNKLct0p7P6NaN-0w)|
@@ -102,7 +102,8 @@ Mixed-scale DenseNet/RF-Mixed-scale DenseNet, ShuffleNetPlus/RFShuffleNetPlus, S
 |Mixed-scale DenseNet|49.9?|0.80M|Yes/No/Yes|*|*|*|*|
 |SE-WResNetV2|?|?M|Yes/No/No|80.13/77.15|90.87/90.59|[GoogleDrive](https://drive.google.com/open?id=1MIJL6cfoBt3opcPWeNfudXLimE42Ow6_)|/|
 
-
+* S.S.: Single Scale
+  
 ## Contact
 ansleliu@gmail.com  
 h.liu@tu-braunschweig.de
