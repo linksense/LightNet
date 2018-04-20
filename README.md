@@ -4,6 +4,7 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 
 - **[MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1157)**: Modified MobileNetV2<sup>[[1,8]](#references)</sup> + Spatial-Channel Sequeeze & Excitation (SCSE)<sup>[[6]](#references)</sup> + ASPP<sup>[[2,3]](#references)</sup> + Encoder-Decoder Arch.<sup>[[3]](#references)</sup> + InplaceABN<sup>[[4]](#references)</sup>.
 - **[RF-MobileNetV2Plus](https://www.cityscapes-dataset.com/method-details/?submissionID=1172)**: Modified MobileNetV2 + SCSE + Receptive Field Block (RFB)<sup>[[5]](#references)</sup> + Encoder-Decoder Arch. + InplaceABN.
+- **MobileNetV2Vortex**: Modified MobileNetV2 + SCSE + Vortex Pooling<sup>[[24]](#references)</sup> + Encoder-Decoder Arch. + InplaceABN.
 - **MobileNetV2Share**: Split Image & Concat Features + Modified MobileNetV2 + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **Mixed-scale DenseNet**: Modified Mixed-scale DenseNet<sup>[[11]](#references)</sup> + SCSE + ASPP/RFB + InplaceABN.
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
@@ -41,6 +42,7 @@ We measure our performance on Cityscapes pixel-level segmentation, and achieve u
 <img src="https://github.com/ansleliu/LightNet/blob/master/resource/MobileNetV2Plus%26RF-MobileNetV2Plus.png" />
 <img src="https://github.com/ansleliu/LightNet/blob/master/resource/ASPP.png" />
 <img src="https://github.com/ansleliu/LightNet/blob/master/resource/Original-RFBlock.png" />
+<img src="https://github.com/ansleliu/LightNet/blob/master/resource/VortexPooling.png" />
 <img src="https://github.com/ansleliu/LightNet/blob/master/resource/SCSE.png" />
 </p>
 
