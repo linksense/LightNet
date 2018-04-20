@@ -9,7 +9,7 @@ This repository contains the code (in PyTorch) for: "LightNet: Light-weight Netw
 - **SE-WResNetV2**: Modified WResNetV2 (InplaceABN & SCSE/SE)<sup>[[4,6,7,13]](#references)</sup> + SCSE/SE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 - **ShuffleNetPlus**: Modified ShuffleNet<sup>[[9]](#references)</sup> + SCSE + ASPP/RFB + Encoder-Decoder Arch. + InplaceABN.
 
-**!!!New!!!**: add **Add Vortex Pooling**<sup>[[22, 23]](#references)</sup>
+**!!!New!!!**: add **Add Vortex Pooling**<sup>[[24]](#references)</sup>
 
 I no longer have GPUs to continue more experiments and model training (I **borrowed** 2 GPUs from the [Institute for Computer Graphics @ TU Braunschweig](https://www.cg.cs.tu-bs.de/) to complete preliminary experiments, so thank them and [Lukas Zhang](https://github.com/ZHHJemotion) here.), 
 so if you like, welcome to experiment with other under-training models and my ideas!
