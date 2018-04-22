@@ -162,14 +162,14 @@ class VortexPooling(nn.Module):
                                                       ("bn3x3", nn.BatchNorm2d(num_features=out_chs))]))
 
         self.vortex_bra2 = nn.Sequential(OrderedDict([("avg_pool", nn.AvgPool2d(kernel_size=rate[1], stride=1,
-                                                                                padding=int((rate[0]-1)/2), ceil_mode=False)),
+                                                                                padding=int((rate[1]-1)/2), ceil_mode=False)),
                                                       ("conv3x3", nn.Conv2d(in_chs, out_chs, kernel_size=3,
                                                                             stride=1, padding=rate[1], bias=False,
                                                                             groups=1, dilation=rate[1])),
                                                       ("bn3x3", nn.BatchNorm2d(num_features=out_chs))]))
 
         self.vortex_bra3 = nn.Sequential(OrderedDict([("avg_pool", nn.AvgPool2d(kernel_size=rate[2], stride=1,
-                                                                                padding=int((rate[0]-1)/2), ceil_mode=False)),
+                                                                                padding=int((rate[2]-1)/2), ceil_mode=False)),
                                                       ("conv3x3", nn.Conv2d(in_chs, out_chs, kernel_size=3,
                                                                             stride=1, padding=rate[2], bias=False,
                                                                             groups=1, dilation=rate[2])),
@@ -190,7 +190,7 @@ class VortexPooling(nn.Module):
                          self.vortex_bra2(x),
                          self.vortex_bra3(x)], dim=1)
 
-        out = self.aspp_catdown(out)
+        out = self.vortex_catdown(out)
         return self.upsampling(out)
 
 
