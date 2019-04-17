@@ -1,5 +1,5 @@
 # LightNet
-## **[LightNet++: Boosted Light-weighted Networks for Real-time Semantic Segmentation](https://github.com/ansleliu/LightNetPlusPlus)**
+## !!!New Repo!!! **[LightNet++: Boosted Light-weighted Networks for Real-time Semantic Segmentation](https://github.com/ansleliu/LightNetPlusPlus)**
 
 This repository contains the code (in PyTorch) for: "LightNet: Light-weight Networks for Semantic Image Segmentation
 " (underway) by Huijun Liu @ TU Braunschweig.
